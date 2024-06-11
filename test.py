@@ -1,24 +1,41 @@
 from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.core.window import Window, Keyboard
+from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.core.window import Window
+from kivy.core.window import Keyboard
 
-class ColSpanApp(App):
+class KeyboardApp(App):
     def build(self):
-        grid = GridLayout(cols=4)
+        self.label = Label(text="Type something...", font_size='20sp')
+        layout = BoxLayout(orientation='vertical')
+        layout.add_widget(self.label)
 
-        # Button that simulates spanning two columns
-        span_button = Button(text='Span 2 Columns', size_hint_x=None, width=200)
-        grid.add_widget(span_button)
+        self._keyboard  = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
-        # Other buttons
-        for i in range(3):  # Only three more buttons on this row to total 4 columns
-            grid.add_widget(Button(text=f'Button {i+1}'))
+        # Bind the keyboard to the on_key_down callback
+        #Window.bind(on_key_down=self.on_key_down)
+        return layout
 
-        # Fill in more rows normally
-        for i in range(8):  # Add 8 more buttons to fill 2 more rows
-            grid.add_widget(Button(text=f'Button {i+5}'))
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
 
-        return grid
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        print(keycode[1])
+        return True
+
+    def on_key_down(self, instance, keyboard, keycode, text, modifiers):
+        # keycode[1] is the text of the key pressed
+        # Update the label text to show the last key pressed
+        print(keycode[1])
+        #self.label.text = f'Last key pressed: {text} (Keycode: {keycode[1]})'
 
 if __name__ == '__main__':
-    ColSpanApp().run()
+    KeyboardApp().run()

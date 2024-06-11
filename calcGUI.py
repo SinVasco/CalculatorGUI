@@ -48,6 +48,14 @@ class CalculatorApp(App):
                 self.display.text = str(eval(self.display.text))
             except Exception:
                 self.display.text = 'Error'
+        elif instance.text == '%':
+            self.display.text += '/ 100'
+            try:
+                self.display.text = str(eval(self.display.text))
+            except Exception:
+                self.display.text = 'Error'
+        elif instance.text == '+/-':
+            self.display.text = f'-1*({self.display.text})'
         elif self.display.text == '0':
             self.display.text = instance.text
         else:
